@@ -1,0 +1,12 @@
+# Ignore .env file
+.env
+
+# Ignore README.md file
+# README.md
+
+# Ignore all Docker files
+# Dockerfile
+# .dockerignore
+
+# Ignore the virtual environment folder
+dad_venv/

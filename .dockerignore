@@ -1,0 +1,12 @@
+# Ignore .git and .gitignore itself
+
+.git
+.gitignore
+
+# Ignore .env file
+
+.env
+
+# Ignore README.md file
+
+README.md
