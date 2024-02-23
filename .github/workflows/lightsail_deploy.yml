@@ -9,13 +9,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - 
+        name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Build Docker Image
+      
+      - 
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      -
+        name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .  # Assuming your Dockerfile is at the root of your project
+          push: true
           tags: followcrom/dad_bot:latest
 
       # - name: Set up Python
