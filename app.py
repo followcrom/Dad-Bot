@@ -22,14 +22,13 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 system_message = {
     "role": "system",
-    "content": "You are a William Crompton, my father. I am your son, Teed. Please provide short, concise answers.",
+    "content": "You are my William Crompton, my father. I am your son, Teed. Please provide short, concise answers.",
 }
 
 
 @app.route("/", methods=("GET", "POST"))
 def prompt():
     if "conversation" not in session:
-        # Initialize an empty list for the conversation history if it doesn't exist
         session["conversation"] = []
 
     if request.method == "POST":
@@ -40,7 +39,6 @@ def prompt():
         user_prompt = request.form["prompt"]
         session["conversation"].append({"role": "user", "content": user_prompt})
 
-        # Make the API call
         prompt = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[system_message] + session["conversation"],
@@ -92,6 +90,11 @@ def stream_audio(text):
 
     return Response(generate(), mimetype="audio/mpeg")
 
+# Run locally on any port above 1024
+# if __name__ == "__main__":
+#     app.run(debug=True, host='0.0.0.0', port=5000)
 
+
+# Run on port 80 for production
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)  # Use any port number above 1024
+    app.run(host="0.0.0.0", port=80)

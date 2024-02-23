@@ -1,0 +1,33 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        uses: actions/docker/build-push-action@v2
+        with:
+          context: .  # Assuming your Dockerfile is at the root of your project
+          tags: followcrom/dad_bot:latest
+
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.x"
+
+      # - name: Install dependencies
+      #   run: pip install boto3
+
+      # - name: Execute Python Script
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   run: python push_to_lightsail.py
