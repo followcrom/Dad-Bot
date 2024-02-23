@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Docker Image
-        uses: actions/docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .  # Assuming your Dockerfile is at the root of your project
           tags: followcrom/dad_bot:latest
