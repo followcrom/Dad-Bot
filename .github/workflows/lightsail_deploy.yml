@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy to AWS Lightsail
         run: |
-          aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image dad_bot:latest
+          aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image followcrom/dad_bot:latest
 
       - name: Update Lightsail Container Service Deployment
         run: |
