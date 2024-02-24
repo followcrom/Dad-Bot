@@ -1,42 +1,46 @@
-name: Deploy to Lightsail
+name: Build, Push and Deploy to Lightsail
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - 
-        name: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - 
-        name: Login to Docker Hub
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      -
-        name: Build and push
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: followcrom/dad_bot:latest
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: "3.x"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
 
-      # - name: Install dependencies
-      #   run: pip install boto3
+      - name: Check AWS CLI version
+        run: aws --version
 
-      # - name: Execute Python Script
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: python push_to_lightsail.py
+      - name: Deploy to AWS Lightsail
+        run: |
+          aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image dad_bot:latest
+
+      - name: Update Lightsail Container Service Deployment
+        run: |
+          aws lightsail create-container-service-deployment --service-name dad-bot --containers '{"dad-bot-cont": {"image": "dad-bot.dad-bot.eu-west-2.ocs.amazonaws.com/dad-bot:latest", "ports": {"80": "HTTP"}}}' --public-endpoint '{"containerName": "dad-bot-cont", "containerPort": 80, "healthCheck": {"path": "/"}}'
+
+
