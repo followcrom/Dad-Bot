@@ -13,17 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: followcrom/dad_bot:latest
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     push: true
+      #     tags: followcrom/dad_bot:latest
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy to AWS Lightsail
         run: |
-          aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image followcrom/dad_bot:latest
+          aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image followcrom/dad_bot:latest --dry-run
 
       - name: Update Lightsail Container Service Deployment
         run: |
