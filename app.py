@@ -1,3 +1,8 @@
+"""
+BigAl VoiceID: NsManPzvLKKRvmmOUBOo
+Pajnatara VoiceID: z9ULidXEujRLhPKDEh8q
+"""
+
 from flask import (
     Flask,
     Response,
@@ -20,9 +25,14 @@ client = OpenAI()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
+# system_message = {
+#     "role": "system",
+#     "content": "You are Prajnatara, an older Indian lady who is calm and compassionate. Please provide short, concise answers.",
+# }
+
 system_message = {
     "role": "system",
-    "content": "You are my William Crompton, my father. I am your son, Teed. Please provide short, concise answers.",
+    "content": "You are William Crompton, my father. I am your son, Teed. Please provide short, concise answers.",
 }
 
 
@@ -91,8 +101,8 @@ def stream_audio(text):
     return Response(generate(), mimetype="audio/mpeg")
 
 # Run locally on any port above 1024
-# if __name__ == "__main__":
-#     app.run(debug=True, host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     app.run(debug=True, host='127.0.0.1', port=5000)
 
 
 # Run on port 80 for production

@@ -1,7 +1,6 @@
 @font-face {
   font-family: "ColfaxAI";
-  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2)
-      format("woff2"),
+  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2) format("woff2"),
     url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff) format("woff");
 }
 
@@ -12,16 +11,18 @@ input {
   color: #353740;
   font-family: "ColfaxAI", Helvetica, sans-serif;
 }
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 40px;
 }
+
 .icon {
-  width: 34px;
-  color: #10a37f;
+  width: 256px;
 }
+
 h3 {
   font-size: 32px;
   line-height: 40px;
@@ -29,21 +30,25 @@ h3 {
   color: #202123;
   margin: 16px 0 20px;
 }
+
 #promptForm {
   display: flex;
   flex-direction: column;
   width: 320px;
 }
+
 #promptForm input[type="text"] {
   padding: 12px 16px;
   border: 1px solid #10a37f;
   border-radius: 4px;
   margin-bottom: 20px;
 }
+
 ::placeholder {
   color: #8e8ea0;
   opacity: 0.8;
 }
+
 #promptForm input[type="submit"] {
   padding: 12px 0;
   color: #fff;
@@ -53,16 +58,19 @@ h3 {
   text-align: center;
   cursor: pointer;
 }
+
 #promptForm input[type="submit"]:hover {
   background-color: #0d815c;
   transition: background-color 0.3s ease;
 }
+
 #reset {
   display: flex;
   flex-direction: column;
   width: 320px;
   margin-top: 10px;
 }
+
 #reset input[type="submit"] {
   padding: 12px 0;
   color: #fff;
@@ -72,21 +80,27 @@ h3 {
   text-align: center;
   cursor: pointer;
 }
+
 #reset input[type="submit"]:hover {
   background-color: purple;
   transition: background-color 0.3s ease;
 }
+
 .result {
   margin-top: 10px;
 }
+
 .user {
-  background-color: #e0f7fa; /* Light blue background for user comments */
+  background-color: #e0f7fa;
+  /* Light blue background for user comments */
   padding: 8px;
   margin: 4px;
   border-radius: 4px;
 }
+
 .assistant {
-  background-color: #ede7f6; /* Light purple background for assistant responses */
+  background-color: #ede7f6;
+  /* Light purple background for assistant responses */
   padding: 8px;
   margin: 4px;
   border-radius: 4px;
