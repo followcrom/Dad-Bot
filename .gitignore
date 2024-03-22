@@ -10,3 +10,9 @@
 
 # Ignore the virtual environment folder
 dad_venv/
+
+# Ignore the update cmd
+update-container-cmd.txt
+
+# Ignore workspace
+dad_bot.code-workspace

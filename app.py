@@ -1,6 +1,7 @@
 """
 BigAl VoiceID: NsManPzvLKKRvmmOUBOo
 Pajnatara VoiceID: z9ULidXEujRLhPKDEh8q
+Dave: CYw3kZ02Hs0563khs1Fj
 """
 
 from flask import (
@@ -88,7 +89,7 @@ def stream_audio(text):
     }
 
     response = requests.post(
-        "https://api.elevenlabs.io/v1/text-to-speech/NsManPzvLKKRvmmOUBOo/stream",
+        "https://api.elevenlabs.io/v1/text-to-speech/CYw3kZ02Hs0563khs1Fj/stream",
         json=data,
         headers=headers,
         stream=True,
@@ -101,10 +102,10 @@ def stream_audio(text):
     return Response(generate(), mimetype="audio/mpeg")
 
 # Run locally on any port above 1024
-# if __name__ == '__main__':
-#     app.run(debug=True, host='127.0.0.1', port=5000)
+if __name__ == '__main__':
+    app.run(debug=True, host='127.0.0.1', port=5000)
 
 
 # Run on port 80 for production
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=80)

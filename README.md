@@ -7,6 +7,20 @@
 
 ## Local Testing
 
+Uncomment the line to 'Run locally on any port above 1024'.
+
+### In terminal
+
+Start venv
+
+`source dad_venv/bin/activate`
+
+SSH into the server
+
+ssh -i ~/.ssh/dad-bot-key.pem ubuntu@ec2-public-IP-address.eu-west-2.compute.amazonaws.com
+
+### In Docker
+
 Open Docker Desktop and wait for it to initialize and show a status of 'Running'. This allows Docker commands to be recognized in the Linux terminal.
 
 Navigate to the DadBot app's directory.
@@ -96,13 +110,7 @@ Enter the following command to push the container image on your local machine to
 Create a new deployment for your container service using the following command:
 
 ```
-aws lightsail create-container-service-deployment --service-name dad-bot --containers '{"dad-bot-cont": {"image": "dad-bot.dad-bot.eu-west-2.ocs.amazonaws.com/dad-bot:latest", "ports": {"80": "HTTP"}, "command": ["your", "launch", "command", "here"]}}' --public-endpoint '{"containerName": "dad-bot-cont", "containerPort": 80, "healthCheck": {"path": "/"}}
-```
-
-If you need to update or add new environment variables, you can include them in your deployment command under the specific container configurations. For example:
-
-```
-aws lightsail create-container-service-deployment --service-name dad-bot --containers '{"dad-bot-cont": {"image": "dad-bot.dad-bot.eu-west-2.ocs.amazonaws.com/dad-bot:latest", "environment": {"VAR_NAME": "value", "ANOTHER_VAR": "another value"}, "ports": {"80": "HTTP"}, "command": ["your", "launch", "command", "here"]}}' --public-endpoint '{"containerName": "dad-bot-cont", "containerPort": 80, "healthCheck": {"path": "/"}}
+aws lightsail create-container-service-deployment --service-name dad-bot --containers '{"dad-bot-cont": {"image": ":dad-bot.dad-bot.3", "environment": {"ELEVENLABS_API_KEY": "${{ secrets.ELEVENLABS_API_KEY }}", "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}", "SECRET_KEY": "${{ secrets.SECRET_KEY }}"}, "ports": {"80": "HTTP"}}}' --public-endpoint '{"containerName": "dad-bot-cont", "containerPort": 80, "healthCheck": {"path": "/"}}'
 ```
 
 Here's how you can use this command to check the status of your container service:
