@@ -13,3 +13,6 @@ dad_venv/
 
 # Ignore workspace
 dad_bot.code-workspace
+
+# Ignore the provision.sh
+provision.sh

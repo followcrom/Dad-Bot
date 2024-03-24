@@ -32,3 +32,12 @@ python3 -m venv dad_venv
 
 # Activate the virtual environment
 source dad_venv/bin/activate
+
+# If you need to install these dependencies on another system (like your AWS EC2 instance), simply activate the virtual environment there and run:
+pip install -r requirements.txt
+
+# If you only need the environment variables for a single session (they'll be lost after you log out or close the terminal), you can export them directly in the terminal:
+export ELEVENLABS_API_KEY=
+export OPENAI_API_KEY=
+export SECRET_KEY=
+

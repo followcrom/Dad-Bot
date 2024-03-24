@@ -7,7 +7,7 @@
 
 ## Local Testing
 
-Uncomment the line to 'Run locally on any port above 1024'.
+Configure `if __name__ == "__main__":` block in app.py to run the app locally.
 
 ### In terminal
 
@@ -19,11 +19,7 @@ Stop venv
 
 `deactivate`
 
-SSH into the server
-
-ssh -i ~/.ssh/dad-bot-key.pem ubuntu@ec2-public-IP-address.eu-west-2.compute.amazonaws.com
-
-Git / Github
+# Git / Github
 
 git checkout aws
 
@@ -31,140 +27,274 @@ git add .
 git commit -m "Add changes for AWS deployment"
 git push origin aws
 
-# Remove the .github directory and its contents
+## Remove the .github directory and its contents
 git rm -r .github
 
-# Commit the changes
+## Commit the changes
 git commit -m "Remove README and .github directory"
 
-# Push the changes to the remote aws branch
+## Push the changes to the remote aws branch
 git push origin aws
 
-### In Docker
+# AWS
 
-Open Docker Desktop and wait for it to initialize and show a status of 'Running'. This allows Docker commands to be recognized in the Linux terminal.
+## SSH into the server
 
-Navigate to the DadBot app's directory.
+ssh -i ~/.ssh/dad-bot-key.pem ubuntu@ec2-35-177-52-228.eu-west-2.compute.amazonaws.com
 
-Step 1: **Build Docker Image**
+## Environment Variables
 
-Ensure you have a `Dockerfile` in the root of your app project. Then, run the following command in your terminal to build the image:
+**Note:** When using a Systemd Service, you need to set environment variables in the service file. If you've saved your environment variables in ~/.bashrc, they'll be available in interactive bash shells. However, when systemd starts services like your Gunicorn service, it doesn't read variables from shell-specific files like ~/.bashrc.
 
-   ```sh
-   docker build -t dad_bot:dev .
-   ```
+### Temporary or session-specific variables
 
-Here, dad_bot:dev is the name and tag for your Docker image, and the . specifies the current directory where your Dockerfile is located.
+`export VAR_NAME="value"`
 
-Step 2: **Run Your Docker Container**
+### Persistent Environment Variables:
+For environment variables that persist across sessions and reboots, you can add them to the ~/.profile, ~/.bashrc, or /etc/environment file, depending on your specific needs.
 
-After building the image, you can run it as a container. Use the following command to start your Flask app inside a Docker container:
+- Use ~/.bashrc or ~/.profile for user-specific configurations, which is often preferred for a single user or application-specific settings.
 
-```
-docker run -p 5000:5000 --env-file ./.env dad_bot:dev
-```
-
-This command tells Docker to run the container and map port 5000 of the container to port 5000 on your host machine. This way, you can access your Flask app by visiting http://localhost:5000 in your web browser.
-
-Step 3: **List Running Containers**
-
-Open your terminal and run the following command to list all currently running Docker containers:
-
-```
-docker ps -a
-```
-This command will show you a table of all active containers, including their CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, and NAMES.
-
-Step 4: **Stop the Container**
-
-Once you've identified the CONTAINER ID or NAME of your app container from the list, you can stop it using:
-
-```
-docker stop [CONTAINER_ID_OR_NAME]
+```bash
+nano ~/.bashrc
 ```
 
-This command will send a stop signal to your Docker container, allowing it to gracefully shut down.
+Add the export line at the end of the file:
 
-Step 4: **Removing Stopped Containers**
-
-After stopping your Docker container, it will still be in the system in a stopped state. If you wish to remove it completely:
-
-```
-docker rm [CONTAINER_ID_OR_NAME]
+```bash
+export ELEVENLABS_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-This step is optional and can be useful for cleanup, especially during development, to keep your environment tidy.
+Save and close the file. For changes to take effect, either log out and log back in, or source the file:
 
-## Building for Production
-
-Step 1: **Build Your Docker Image**
-
-```
-docker build -t dad_bot:latest .
+```bash
+source ~/.bashrc
 ```
 
-Step 2: **Tag Your Docker Image for Registry**
-
-Before pushing your Docker image to Docker Hub, tag it with the registry's URL:
-
-```
-docker tag dad_bot:latest followcrom/dad_bot:latest
+- Use /etc/environment for system-wide environment variables that should affect all users and services. Be cautious with this file, as changes affect the entire system. 
+```bash
+sudo nano /etc/environment
 ```
 
-Step 3: **Push Your Docker Image to the Registry**
+Add the variable in the NAME="value" format (without the export keyword):
 
+`VAR_NAME="value"`
+
+Save and close the file. The changes will take effect at the next login or reboot.
+
+## Run in EC2 on Flask dev server
+
+`flask run --host=0.0.0.0 --port=5000`
+
+Ensure the security group allows inbound traffic on port 5000
+
+Then vist the public IP address of the EC2 instance on port 5000:
+
+http://Your-EC2-Instance-Public-IP:5000
+
+
+## Run on EC2 with Gunicorn
+
+### Install Gunicorn
+
+`pip install gunicorn`
+
+### Run Gunicorn
+
+Be sure to open port 8000 in the security group. Start Gunicorn with your Flask application:
+
+`gunicorn --bind 0.0.0.0:8000 app:app`
+
+(Replace app:app if they are different.)
+
+With Gunicorn running, your Flask app should be accessible from your browser using your EC2 instance's public IP or domain name followed by :8000.
+
+http://Your-EC2-Instance-Public-IP:8000
+
+### Run on EC2 with Nginx
+
+### Install Nginx
+
+```bash
+sudo apt-get update
+sudo apt-get install nginx -y
 ```
-docker push followcrom/dadbot:latest
+
+## Configure Nginx
+Create a new configuration file in /etc/nginx/sites-available/
+
+```bash
+cd /etc/nginx/sites-available
+sudo nano dadapp
 ```
 
+Add the Following Configuration:
 
-## Deploy Your Docker Image
+```nginx
+server {
+    listen 80;
+    server_name myapp.com;  # Replace with your domain or public IP
 
-[AWS Docs: push container images from your local machine to your Lightsail container service](https://docs.aws.amazon.com/en_us/lightsail/latest/userguide/amazon-lightsail-pushing-container-images.html)
-
-Enter the following command to push the container image on your local machine to your container service:
-
-`aws lightsail push-container-image --region eu-west-2 --service-name dad-bot --label dad-bot --image followcrom/dad_bot:latest`
-
-`aws lightsail push-container-image --region <Region> --service-name <ContainerServiceName> --label <ContainerImageLabel> --image <LocalContainerImageName>:<ImageTag>`
-
-Create a new deployment for your container service using the following command:
-
+    location / {
+        proxy_pass http://127.0.0.1:8000;  # Forward requests to Gunicorn
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
 ```
-aws lightsail create-container-service-deployment --service-name dad-bot --containers '{"dad-bot-cont": {"image": ":dad-bot.dad-bot.3", "environment": {"ELEVENLABS_API_KEY": "${{ secrets.ELEVENLABS_API_KEY }}", "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}", "SECRET_KEY": "${{ secrets.SECRET_KEY }}"}, "ports": {"80": "HTTP"}}}' --public-endpoint '{"containerName": "dad-bot-cont", "containerPort": 80, "healthCheck": {"path": "/"}}'
+
+Create a symbolic link of your configuration file to enable it. This will create a link in /etc/nginx/sites-enabled/ pointing to your configuration file in /etc/nginx/sites-available/.
+
+```bash
+sudo ln -s /etc/nginx/sites-available/dadapp /etc/nginx/sites-enabled
 ```
 
-Here's how you can use this command to check the status of your container service:
+Test the Nginx Configuration:
 
-`aws lightsail get-container-services --service-name dad-bot`
+`sudo nginx -t`
 
-Filtering the Output
-If you're looking for specific information and want to filter the output, you can use the --query option with the AWS CLI command. For example, to get just the state of the container service, you can run:
+Restart Nginx:
 
-`aws lightsail get-container-services --service-name dad-bot --query 'containerServices[0].state'`
+`sudo systemctl restart nginx`
 
-Watching the Status
-If you're waiting for a deployment to complete or for the service state to change, you might find it useful to repeatedly check the status. You can do this in a bash loop or use the watch command in Linux/Unix environments:
+Check the status of Nginx:
 
-bash
-Copy code
-watch -n 10 'aws lightsail get-container-services --service-name dad-bot --query "containerServices[0].state"'
-This command uses watch to rerun the AWS CLI command every 10 seconds, showing you the latest state each time.
+`sudo systemctl status nginx`
 
 
+## Setting Up a Systemd Service (Recommended for Production)
+This will ensure your app starts automatically on boot and provides easy management commands (start, stop, restart, status).
+
+To set up a systemd service for Gunicorn, create a new service file:
+
+```bash
+cd /etc/systemd/system
+sudo nano dadapp.service
+```
+
+Add the following configuration:
+
+```nginx
+[Unit]
+Description=Gunicorn instance to serve dad-bot
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Dad-Bot
+ExecStart=/home/ubuntu/dad_venv/bin/gunicorn -b localhost:8000 app:app
+Environment="ELEVENLABS_API_KEY=xxx"
+Environment="OPENAI_API_KEY=xxx"
+Environment="SECRET_KEY=xxx"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**Note**: The Environment variables need to be set in the systemd service file. If you've saved your environment variables in ~/.bashrc, they'll be available in interactive bash shells. However, when systemd starts services like your Gunicorn service, it doesn't read variables from shell-specific files like ~/.bashrc.
+
+### Reload and Restart the Service
+After making these changes, reload the systemd configuration and restart your service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart dadapp.service
+```
+
+### Enable and start the service
+
+Use systemctl to manage the service (start, stop, restart, status).
+
+`sudo systemctl enable dadapp.service`
+
+`sudo systemctl start dadapp.service`
+
+`sudo systemctl status dadapp.service`
 
 
+## Point the IP address to a domain name
 
-### Docker cmds
+### In IONOS
 
-`docker images`
+- Go to Domains
+- Select the domain
+- Go to Subdomains
+- Create a subdomain
+- Click on DNS
+- Point the A record to the IP address of the EC2 instance
+- Edit A records for both @ and www to point to the IP address
+- Save
 
-`docker rmi xxx`
+**Note:** DNS changes can take some time to propagate across the internet. It's common to allow up to 24-48 hours, but often changes take effect much more quickly.
 
-`docker stop xxx`
+## Running your app on an HTTPS address
 
-`docker rm xxx`
+Make sure the security group associated with your EC2 instance allows inbound connections on port 443 (HTTPS).
 
+Use **Let's Encrypt** - a free, automated, and open Certificate Authority - with **Certbot** - a client that fetches and deploys SSL/TLS certificates for your web server.
+
+### Step 1: Install Certbot and the Nginx Plugin
+
+```bash
+sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx -y
+```
+
+### Step 2: Adjust Your Nginx Configuration
+
+`cd /etc/nginx/sites-available/`
+
+`sudo nano dadapp`
+
+Ensure the server_name directive is set to your subdomain:
+
+`server_name dadbot.followcrom.online;`
+
+So:
+
+```nginx
+server {
+    listen 80;
+    server_name dadbot.followcrom.online;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;  # Forward requests to Gunicorn
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### Step 3: Test and Reload Nginx
+
+`sudo nginx -t`
+
+`sudo systemctl reload nginx`
+
+### Step 4: Obtain and Install SSL Certificate
+
+Run Certbot with the Nginx plugin to obtain and install an SSL certificate:
+
+```bash
+sudo certbot --nginx -d dadbot.followcrom.online
+```
+
+Certbot will guide you through the process.
+
+### Step 5: Automatic Renewal
+Let's Encrypt certificates are valid for 90 days. Certbot creates a cron job or systemd timer to handle renewals, so your certificates should renew automatically. To test the renewal process, you can run:
+
+`sudo certbot renew --dry-run`
+
+<br>
+
+# Eleven Labs API
 
 ### Get voices
 
