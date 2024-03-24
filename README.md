@@ -21,11 +21,15 @@ Stop venv
 
 # Git / Github
 
+```git
 git checkout aws
 
 git add .
+
 git commit -m "Add changes for AWS deployment"
+
 git push origin aws
+```
 
 ## Remove the .github directory and its contents
 git rm -r .github
