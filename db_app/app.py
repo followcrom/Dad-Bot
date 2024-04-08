@@ -106,6 +106,10 @@ def stream_audio(text):
 #     app.run(debug=True, host='127.0.0.1', port=5000)
 
 
-# Run on port 80 for production
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+# This block only runs if the script is executed directly, and not when the module is imported.
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=80)
+
+# On AWS we are running the app on Gunicon, so the above code is not needed. Gunicorn acts as a WSGI HTTP server for Python web applications. When you run your application using Gunicorn, it imports the application module and serves it without needing the if __name__ == "__main__": block.
+
+

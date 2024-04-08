@@ -5,7 +5,7 @@
 </div>
 
 
-## Local Testing
+# Local Testing
 
 Configure `if __name__ == "__main__":` block in app.py to run the app locally.
 
@@ -18,27 +18,6 @@ Start venv
 Stop venv
 
 `deactivate`
-
-# Git / Github
-
-```git
-git checkout aws
-
-git add .
-
-git commit -m "Add changes for AWS deployment"
-
-git push origin aws
-```
-
-## Remove the .github directory and its contents
-git rm -r .github
-
-## Commit the changes
-git commit -m "Remove README and .github directory"
-
-## Push the changes to the remote aws branch
-git push origin aws
 
 # AWS
 
@@ -303,6 +282,18 @@ Let's Encrypt certificates are valid for 90 days. Certbot creates a cron job or 
 `sudo certbot renew --dry-run`
 
 <br>
+
+# Git / Github
+
+```git
+git checkout aws
+
+git add .
+
+git commit -m "Add changes for AWS deployment"
+
+git push origin aws
+```
 
 # Eleven Labs API
 
