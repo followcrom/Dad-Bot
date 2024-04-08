@@ -10,3 +10,6 @@
 
 # Ignore the virtual environment folder
 dad_venv/
+
+# Ignore the docs directory
+docs/
