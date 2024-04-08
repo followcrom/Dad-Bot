@@ -1,7 +1,7 @@
 # DadBot
 
 <div align="center">
-  <img src="static/dad-dare_256x256.jpg" alt="DadBot Image">
+  <img src="db_app/static/dad-dare_256x256.jpg" alt="DadBot Image">
 </div>
 
 
