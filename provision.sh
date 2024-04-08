@@ -1,6 +1,13 @@
 # If not handled in user data:
-sudo apt-get update
-sudo apt-get upgrade -y
+# Update the package lists
+sudo apt update
+
+# Upgrade installed packages
+sudo apt upgrade -y
+
+# Clean up unused packages and free up disk space
+sudo apt autoremove -y
+sudo apt autoclean
 
 
 # Most Ubuntu images come with Python pre-installed, but to make sure you have Python3 and Pip:
@@ -24,7 +31,7 @@ else
 fi
 
 # If needed, reboot the system. This will log you out of the VM and restart it.
-sudo reboot
+# sudo reboot
 
 
 # Set Up a Virtual Environment
