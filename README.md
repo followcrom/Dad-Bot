@@ -281,8 +281,6 @@ Let's Encrypt certificates are valid for 90 days. Certbot creates a cron job or 
 
 `sudo certbot renew --dry-run`
 
-<br>
-
 # Git / Github
 
 ```git
