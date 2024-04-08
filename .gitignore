@@ -16,3 +16,6 @@ dad_bot.code-workspace
 
 # Ignore the provision.sh
 provision.sh
+
+# Ignore all files in the docs directory
+/docs/*

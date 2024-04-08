@@ -42,15 +42,11 @@ git push origin aws
 
 # AWS
 
-AWS dynamically assign public IP addresses. This means that if you stop and start an EC2 instance, it will have a different public IP address. This will require you to update your DNS records: Update the A record for the subdomain **dadbot.followcrom.online** to point to the new IP address.
+IP addresses are dynamically assigned by AWS. That means if you stop and start an instance, the IP address will change, thereby requiring a change in the subdomain DNS settings A record.
 
 ## SSH into the server
 
-**Note:** The IP address will change each time the server is stopped and started.
-
-```bash
-ssh -i ~/.ssh/dad-bot-key.pem ubuntu@ec2-xx-xx-xx-xx.eu-west-2.compute.amazonaws.com
-```
+ssh -i ~/.ssh/dad-bot-key.pem ubuntu@ec2-35-177-52-228.eu-west-2.compute.amazonaws.com
 
 ## Environment Variables
 
