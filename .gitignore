@@ -16,4 +16,6 @@ dad_bot.code-workspace
 
 # Ignore all files in the docs directory
 /docs/*
+
+# Ignore all files in pycache
 db_app/__pycache__/*
