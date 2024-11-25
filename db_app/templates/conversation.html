@@ -1,0 +1,25 @@
+{% if conversation %}
+<div class="result">
+    {% for message in conversation %}
+    <div class="{{ message.role }}">
+        {% if message.role == "user" %}
+        <strong>You:</strong>
+        {% else %}
+        <strong>Dad:</strong>
+        {% endif %}
+        {{ message.content }}
+    </div>
+    {% endfor %}
+</div>
+
+
+{% if conversation[-1].role == "assistant" %}
+<audio id="audioPlayer" hidden autoplay>
+    Your browser does not support the audio element.
+</audio>
+<script>
+    var audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.src = "/stream_audio/{{ conversation[-1].content | urlencode }}";
+</script>
+{% endif %}
+{% endif %}

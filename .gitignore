@@ -1,0 +1,19 @@
+# Ignore .env file
+.env
+
+# Ignore README.md file
+# README.md
+
+# Ignore all Docker files
+# Dockerfile
+# .dockerignore
+
+# Ignore the virtual environment folder
+dad_venv/
+
+# Ignore workspace
+dad_bot.code-workspace
+
+# Ignore all files in the docs directory
+/docs/*
+db_app/__pycache__/*
