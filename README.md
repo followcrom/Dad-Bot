@@ -7,19 +7,13 @@
 
 # Local Testing
 
+Start venv: `source dad_venv/bin/activate`
+
 Uncomment `if __name__ == "__main__":` block in app.py to run the app locally.
 
-Then tun the cmd: `python app.py`
+Then run the cmd: `python app.py`
 
-### In terminal
-
-Start venv
-
-`source dad_venv/bin/activate`
-
-Stop venv
-
-`deactivate`
+Stop venv: `deactivate`
 
 # AWS
 
