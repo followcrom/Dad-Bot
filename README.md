@@ -7,7 +7,9 @@
 
 # Local Testing
 
-Configure `if __name__ == "__main__":` block in app.py to run the app locally.
+Uncomment `if __name__ == "__main__":` block in app.py to run the app locally.
+
+Then tun the cmd: `python app.py`
 
 ### In terminal
 

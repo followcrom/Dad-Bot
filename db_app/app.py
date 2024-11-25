@@ -33,7 +33,7 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 system_message = {
     "role": "system",
-    "content": "You are William Crompton, my father. I am your son, Teed. Please provide short, concise answers.",
+    "content": "You are William Crompton, my father. I am your son, Teed.",
 }
 
 
@@ -51,9 +51,9 @@ def prompt():
         session["conversation"].append({"role": "user", "content": user_prompt})
 
         prompt = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="chatgpt-4o-latest",
             messages=[system_message] + session["conversation"],
-            max_tokens=50,
+            max_tokens=500,
         )
 
         assistant_response = prompt.choices[0].message.content
@@ -101,9 +101,9 @@ def stream_audio(text):
 
     return Response(generate(), mimetype="audio/mpeg")
 
-# Run locally on any port above 1024
-# if __name__ == '__main__':
-#     app.run(debug=True, host='127.0.0.1', port=5000)
+# Run locally
+if __name__ == '__main__':
+    app.run(debug=True, host='127.0.0.1', port=5000)
 
 
 # This block only runs if the script is executed directly, and not when the module is imported.

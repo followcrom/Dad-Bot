@@ -1,6 +1,7 @@
 @font-face {
   font-family: "ColfaxAI";
-  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2) format("woff2"),
+  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2)
+      format("woff2"),
     url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff) format("woff");
 }
 
@@ -19,8 +20,9 @@ body {
   padding-top: 40px;
 }
 
-.icon {
+.image {
   width: 256px;
+  border-radius: 8px;
 }
 
 h3 {
@@ -88,6 +90,7 @@ h3 {
 
 .result {
   margin-top: 10px;
+  width: 60%;
 }
 
 .user {
